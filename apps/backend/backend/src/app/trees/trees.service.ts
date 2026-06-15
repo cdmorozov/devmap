@@ -195,12 +195,10 @@ export class TreesService {
     }
 
     async getExploreProfiles() {
-        const thirtyDaysAgo = new Date(Date.now() - 30 * 86400_000);
         const users = await this.prisma.user.findMany({
             where: {
                 isGuest: false,
                 githubUsername: { not: null },
-                githubScans: { some: { scannedAt: { gte: thirtyDaysAgo } } },
             },
             select: {
                 handle: true,
@@ -222,15 +220,13 @@ export class TreesService {
             take: 24,
         });
 
-        return users
-            .filter(u => (u.trees[0]?.nodes.length ?? 0) > 0)
-            .map(u => ({
-                handle: u.handle ?? u.githubUsername,
-                name: u.name,
-                githubUsername: u.githubUsername,
-                verifiedSkills: u.trees[0]?.nodes.length ?? 0,
-                topSkills: u.trees[0]?.nodes.slice(0, 5).map(n => n.title) ?? [],
-            }));
+        return users.map(u => ({
+            handle: u.handle ?? u.githubUsername,
+            name: u.name,
+            githubUsername: u.githubUsername,
+            verifiedSkills: u.trees[0]?.nodes.length ?? 0,
+            topSkills: u.trees[0]?.nodes.slice(0, 5).map(n => n.title) ?? [],
+        }));
     }
 
     async compareProfiles(handleA: string, handleB: string) {

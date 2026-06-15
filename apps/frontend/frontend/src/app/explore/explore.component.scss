@@ -452,6 +452,13 @@
   font-weight: 600;
 }
 
+.mc-empty {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: var(--text-subtle);
+}
+
 .mc-hint {
   display: flex;
   align-items: center;
